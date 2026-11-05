@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️ Mi Amor - Página Romántica</title>
+    <style>
+        /* Estilos generales */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fdfcfb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+            border: 2px solid rgba(255, 182, 193, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hearts-bg {
+            position: fixed;
+            font-size: 20px;
+            color: rgba(255, 107, 107, 0.08);
+            pointer-events: none;
+            animation: floatHearts 20s infinite linear;
+            z-index: 0;
+        }
+
+        @keyframes floatHearts {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .title { text-align: center; margin-bottom: 30px; position: relative; }
+
+        .title h1 {
+            font-size: 2.5rem;
+            color: #e74c6f;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(231, 76, 111, 0.2);
+            letter-spacing: 2px;
+        }
+
+        .title .heart-icon {
+            color: #ff6b6b;
+            font-size: 2.8rem;
+            animation: pulse 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .title p {
+            color: #a0526d;
+            font-style: italic;
+            margin-top: 5px;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .form-group { margin-bottom: 22px; position: relative; }
+
+        .form-group label {
+            display: block;
+            color: #8b3a4f;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i { margin-right: 8px; }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #f8d7da;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            background: rgba(255, 248, 250, 0.8);
+            transition: all 0.3s ease;
+            outline: none;
+            color: #5c2e3f;
+        }
+
+        .form-group input:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+            background: white;
+        }
+
+        .form-group input::placeholder { color: #d4a0b0; font-style: italic; }
+
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.5);
+            background: linear-gradient(135deg, #ff7a7a, #ee4a5f);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+            background: #ffe6e6;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .error-message.show { display: flex; }
+
+        /* ===== MENSAJE DE BIENVENIDA ===== */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 10px 0;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .success-message.show { display: block; }
+
+        .success-message .big-heart {
+            font-size: 3.5rem;
+            animation: pulse 1.5s ease-in-out infinite;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .success-message h2 {
+            color: #e74c6f;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .success-message .romantic-text {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            padding: 15px;
+            border-radius: 20px;
+            margin-top: 15px;
+            color: #5c2e3f;
+            font-weight: 600;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* ===== MENÚ DESPLEGABLE (ACORDEÓN) ===== */
+        .options-menu {
+            margin-top: 25px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-item {
+            background: #fff;
+            border: 2px solid #f8d7da;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            border-color: #ffb6c1;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.1);
+        }
+
+        .menu-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #fffafa;
+            color: #8b3a4f;
+            font-weight: 700;
+            font-size: 1.05rem;
+            transition: background 0.3s ease;
+        }
+
+        .menu-header:hover { background: #fff0f5; }
+
+        .menu-header .arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: #ff6b6b;
+        }
+
+        /* Rotación de la flecha cuando está abierto */
+        .menu-item.active .menu-header .arrow {
+            transform: rotate(180deg);
+        }
+
+        .menu-item.active .menu-header {
+            background: #fff0f5;
+            border-bottom: 2px dashed #f8d7da;
+        }
+
+        .menu-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+            background: #fff;
+            padding: 0 20px;
+        }
+
+        .menu-item.active .menu-content {
+            max-height: 200px; /* Ajusta si agregas contenido más alto */
+            padding: 20px;
+        }
+
+        .menu-content p {
+            color: #a0526d;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        /* Botones dentro del menú */
+        .btn-menu-action {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-menu-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-logout {
+            margin-top: 25px;
+            padding: 12px 35px;
+            background: #f8d7da;
+            border: 2px solid #ff6b6b;
+            border-radius: 50px;
+            color: #8b3a4f;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .btn-logout:hover {
+            background: #ff6b6b;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #b07a8a;
+            font-size: 0.85rem;
+            border-top: 1px solid #f8d7da;
+            padding-top: 20px;
+            font-style: italic;
+        }
+
+        .footer-text span { color: #ff6b6b; }
+        .login-form.hidden { display: none; }
+
+        @media (max-width: 480px) {
+            .container { padding: 25px; margin: 10px; }
+            .title h1 { font-size: 2rem; }
+            .form-group input { padding: 12px 16px; font-size: 0.95rem; }
+            .success-message h2 { font-size: 1.8rem; }
+        }
+
+        .form-group .input-decoration {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ffb6c1;
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        .btn-login .btn-heart {
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* ===== OVERLAY "TE AMO" ===== */
+        .love-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            animation: overlayFadeIn 0.5s ease-out;
+        }
+
+        .love-overlay.show { display: flex; }
+
+        @keyframes overlayFadeIn {
+            from { opacity: 0; transform: scale(1.1); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .love-message {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            padding: 50px 70px;
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(255, 107, 107, 0.5);
+            text-align: center;
+            animation: lovePulse 1.5s ease-in-out infinite;
+            border: 3px solid white;
+            position: relative;
+        }
+
+        @keyframes lovePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .love-message .big-text {
+            font-size: 4.5rem;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+            letter-spacing: 5px;
+        }
+
+        .love-message .sub-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+            margin-top: 10px;
+            font-style: italic;
+            letter-spacing: 2px;
+        }
+
+        .love-message .heart-rain {
+            font-size: 2.5rem;
+            margin-top: 15px;
+            animation: pulse 1s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .content-hidden {
+            opacity: 0.3;
+            pointer-events: none;
+            filter: blur(3px);
+            transition: all 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="heartsContainer"></div>
+
+    <div id="loveOverlay" class="love-overlay">
+        <div class="love-message">
+            <div class="big-text">❤️ ¡Te amo! ❤️</div>
+            <div class="sub-text">Mi corazón de melon</div>
+            <div class="heart-rain">💕 💗 💖</div>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer">
+        
+        <div class="title">
+            <span class="heart-icon">❤️</span>
+            <h1>Mi Amor</h1>
+            <p>〰️ Para ti, con todo mi corazón 〰️</p>
+        </div>
+
+        <div id="loginForm" class="login-form">
+            <form id="loginFormElement" onsubmit="return handleLogin(event)">
+                
+                <div class="form-group">
+                    <label for="username"><i>💕</i> Usuario</label>
+                    <input type="text" id="username" placeholder="Escribe tu usuario..." required autocomplete="off">
+                    <span class="input-decoration">🌸</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i>🔒</i> Contraseña</label>
+                    <input type="password" id="password" placeholder="Escribe tu contraseña..." required>
+                    <span class="input-decoration">🌹</span>
+                </div>
+
+                <div id="errorMessage" class="error-message">
+                    <span>⚠️</span>
+                    <span id="errorText">Usuario o contraseña incorrectos</span>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <span class="btn-heart">💖</span> Acceder <span class="btn-heart">💖</span>
+                </button>
+
+                <div class="footer-text">
+                    <span>💑</span> Feliz Mesiversario <span>💑</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===== MENSAJE DE BIENVENIDA Y MENÚ ===== -->
+        <div id="successMessage" class="success-message">
+            <span class="big-heart">💗</span>
+            <h2>😍 ¡Bienvenida, mi amor! 😍</h2>
+            
+            <div class="romantic-text">
+                ✨ "Cada día a tu lado es un regalo del cielo.<br>
+                Eres mi razón de ser, mi luz y mi alegría." ✨
+            </div>
+
+            <!-- MENÚ DESPLEGABLE -->
+            <div class="options-menu">
+                
+                <!-- Opción 1: Galería de Fotos -->
+                <div class="menu-item">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>📸 Galería de Fotos</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="menu-content">
+                        <p>Un rincón con nuestros mejores recuerdos capturados en imágenes. 💕</p>
+                        <button class="btn-menu-action" onclick="openGallery()">
+                            Abrir Galería 💖
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                    👇 PARA AGREGAR UNA NUEVA OPCIÓN, COPIA DESDE AQUÍ 👇
+                    (Cambia el título, el texto y la acción del botón)
+                -->
+                <div class="menu-item">
+                    <div class="menu-header" onclick="toggleMenu(this)">
+                        <span>💌 Carta de Amor</span>
+                        <span class="arrow">▼</span>
+                    </div>
+                    <div class="menu-content">
+                        <p>Tengo algo especial que decirte, ábrelo cuando quieras.</p>
+                        <button class="btn-menu-action" onclick="alert('Aquí puedes poner un mensaje, abrir otra página o mostrar una carta completa.')">
+                            Leer Carta 💌
+                        </button>
+                    </div>
+                </div>
+                <!-- 
+                    👆 HASTA AQUÍ COPIA PARA AGREGAR UNA NUEVA OPCIÓN 👆
+                -->
+
+            </div>
+            <!-- FIN DEL MENÚ DESPLEGABLE -->
+
+            <button class="btn-logout" onclick="logout()">
+                💔 Cerrar sesión
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const VALID_USER = "Su";
+        const VALID_PASSWORD = "070326";
+
+        // ===== CONTROL DEL MENÚ DESPLEGABLE =====
+        function toggleMenu(header) {
+            const menuItem = header.parentElement;
+            
+            // Opcional: Cerrar otros menús al abrir uno nuevo
+            // const allItems = document.querySelectorAll('.menu-item');
+            // allItems.forEach(item => {
+            //     if (item !== menuItem) item.classList.remove('active');
+            // });
+
+            // Alternar el estado del menú clickeado
+            menuItem.classList.toggle('active');
+        }
+
+        // ===== ABRIR GALERÍA EN NUEVA PESTAÑA =====
+        function openGallery() {
+            // Esto abrirá el archivo "galeria.html" que creamos antes
+            window.open('galeria.html', '_blank');
+        }
+
+        // ===== CORAZONES FLOTANTES DE FONDO =====
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartSymbols = ['❤️', '💕', '💗', '💖', '💘', '💝', '🌸', '🌹'];
+            
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'hearts-bg';
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 25 + 10) + 'px';
+                heart.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                heart.style.animationDelay = (Math.random() * 15) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        // ===== MOSTRAR MENSAJE "TE AMO" =====
+        function showLoveMessage() {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('loveOverlay');
+                const container = document.getElementById('mainContainer');
+                
+                overlay.classList.add('show');
+                container.classList.add('content-hidden');
+                
+                setTimeout(() => {
+                    overlay.classList.remove('show');
+                    container.classList.remove('content-hidden');
+                    
+                    document.getElementById('loginForm').classList.add('hidden');
+                    document.getElementById('successMessage').classList.add('show');
+                    
+                    createHeartConfetti();
+                    resolve();
+                }, 2500);
+            });
+        }
+
+        // ===== MANEJAR LOGIN =====
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            errorMessage.classList.remove('show');
+
+            if (username === VALID_USER && password === VALID_PASSWORD) {
+                await showLoveMessage();
+                return false;
+            } else {
+                if (username !== VALID_USER) {
+                    errorText.textContent = '💔 Usuario incorrecto. ¿Ya probaste con Su?';
+                } else if (password !== VALID_PASSWORD) {
+                    errorText.textContent = '💔 Contraseña incorrecta. Intenta con la fecha donde te di el anillo';
+                } else {
+                    errorText.textContent = '💔 Usuario o contraseña incorrectos';
+                }
+                errorMessage.classList.add('show');
+                
+                const form = document.getElementById('loginFormElement');
+                form.style.animation = 'shake 0.5s ease';
+                setTimeout(() => { form.style.animation = ''; }, 500);
+                
+                return false;
+            }
+        }
+
+        // ===== CONFETI DE CORAZONES =====
+        function createHeartConfetti() {
+            const symbols = ['❤️', '💕', '💗', '💖', '✨', '🌸', '🌹'];
+            
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div');
+                    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+                    el.style.position = 'fixed';
+                    el.style.left = Math.random() * 100 + '%';
+                    el.style.top = '-10%';
+                    el.style.fontSize = (Math.random() * 30 + 15) + 'px';
+                    el.style.pointerEvents = 'none';
+                    el.style.zIndex = '999';
+                    el.style.transition = 'all 4s ease-out';
+                    el.style.opacity = '1';
+                    el.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    document.body.appendChild(el);
+                    
+                    setTimeout(() => {
+                        const randomX = (Math.random() - 0.5) * 200;
+                        el.style.transform = `translate(${randomX}px, ${window.innerHeight + 100}px) rotate(${Math.random() * 720}deg)`;
+                        el.style.opacity = '0';
+                    }, 50);
+                    
+                    setTimeout(() => { el.remove(); }, 4500);
+                }, i * 80);
+            }
+        }
+
+        // ===== CERRAR SESIÓN =====
+        function logout() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('loveOverlay').classList.remove('show');
+            document.getElementById('mainContainer').classList.remove('content-hidden');
+            
+            // Cerrar todos los menús desplegables al salir
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById('mainContainer').style.animation = 'none';
+            setTimeout(() => {
+                document.getElementById('mainContainer').style.animation = 'fadeIn 0.8s ease-out';
+            }, 10);
+        }
+
+        createFloatingHearts();
+        console.log('💕 Usuario: "Su" | Contraseña: "070326" 💕');
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !document.getElementById('successMessage').classList.contains('show')) {
+                document.getElementById('loginFormElement').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+
+</body>
+</html>
