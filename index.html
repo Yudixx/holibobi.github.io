@@ -237,11 +237,7 @@
             color: #ff6b6b;
         }
 
-        /* Rotación de la flecha cuando está abierto */
-        .menu-item.active .menu-header .arrow {
-            transform: rotate(180deg);
-        }
-
+        .menu-item.active .menu-header .arrow { transform: rotate(180deg); }
         .menu-item.active .menu-header {
             background: #fff0f5;
             border-bottom: 2px dashed #f8d7da;
@@ -256,7 +252,7 @@
         }
 
         .menu-item.active .menu-content {
-            max-height: 200px; /* Ajusta si agregas contenido más alto */
+            max-height: 200px; 
             padding: 20px;
         }
 
@@ -268,7 +264,6 @@
             font-style: italic;
         }
 
-        /* Botones dentro del menú */
         .btn-menu-action {
             width: 100%;
             padding: 12px;
@@ -419,6 +414,80 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
             20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
+
+        /* ===== ESTILOS DE LA CARTA ===== */
+        .carta-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .carta-modal.show {
+            display: flex;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .carta-contenido {
+            background: #fff9f0; 
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 2px solid #f0d5b1; 
+            background-image: 
+                linear-gradient(#f0d5b1 1px, transparent 1px),
+                linear-gradient(90deg, #f0d5b1 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: -2px -2px, -2px -2px, -2px -2px;
+            background-color: #fdfcf8;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .cerrar-carta {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            color: #8b3a4f;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .cerrar-carta:hover {
+            color: #ff6b6b;
+            transform: scale(1.1);
+        }
+
+        .carta-papel img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -492,31 +561,25 @@
                     </div>
                     <div class="menu-content">
                         <p>Un rincón con nuestros mejores recuerdos capturados en imágenes. 💕</p>
-                        <button class="btn-menu-action" onclick="openGallery()">
+                        <button class="btn-menu-action" onclick="window.open('galeria.html', '_blank')">
                             Abrir Galería 💖
                         </button>
                     </div>
                 </div>
 
-                <!-- 
-                    👇 PARA AGREGAR UNA NUEVA OPCIÓN, COPIA DESDE AQUÍ 👇
-                    (Cambia el título, el texto y la acción del botón)
-                -->
+                <!-- Opción 2: Carta de Amor -->
                 <div class="menu-item">
                     <div class="menu-header" onclick="toggleMenu(this)">
                         <span>💌 Carta de Amor</span>
                         <span class="arrow">▼</span>
                     </div>
                     <div class="menu-content">
-                        <p>Tengo algo especial que decirte, ábrelo cuando quieras.</p>
-                        <button class="btn-menu-action" onclick="alert('Aquí puedes poner un mensaje, abrir otra página o mostrar una carta completa.')">
+                        <p>Te escribí algo con todo mi corazón. Ábrelo cuando quieras.</p>
+                        <button class="btn-menu-action" onclick="document.getElementById('cartaModal').classList.add('show')">
                             Leer Carta 💌
                         </button>
                     </div>
                 </div>
-                <!-- 
-                    👆 HASTA AQUÍ COPIA PARA AGREGAR UNA NUEVA OPCIÓN 👆
-                -->
 
             </div>
             <!-- FIN DEL MENÚ DESPLEGABLE -->
@@ -528,6 +591,20 @@
 
     </div>
 
+    <!-- ===== MODAL DE LA CARTA ===== -->
+    <div id="cartaModal" class="carta-modal">
+        <div class="carta-contenido">
+            <span class="cerrar-carta" onclick="document.getElementById('cartaModal').classList.remove('show')">&times;</span>
+            
+            <div class="carta-papel">
+                <!-- Aquí se muestran las 3 páginas de tu carta -->
+                <img src="fotos/carta1.jpg" alt="Carta página 1">
+                <img src="fotos/carta2.jpg" alt="Carta página 2">
+                <img src="fotos/carta3.jpg" alt="Carta página 3">
+            </div>
+        </div>
+    </div>
+
     <script>
         const VALID_USER = "Su";
         const VALID_PASSWORD = "070326";
@@ -535,21 +612,7 @@
         // ===== CONTROL DEL MENÚ DESPLEGABLE =====
         function toggleMenu(header) {
             const menuItem = header.parentElement;
-            
-            // Opcional: Cerrar otros menús al abrir uno nuevo
-            // const allItems = document.querySelectorAll('.menu-item');
-            // allItems.forEach(item => {
-            //     if (item !== menuItem) item.classList.remove('active');
-            // });
-
-            // Alternar el estado del menú clickeado
             menuItem.classList.toggle('active');
-        }
-
-        // ===== ABRIR GALERÍA EN NUEVA PESTAÑA =====
-        function openGallery() {
-            // Esto abrirá el archivo "galeria.html" que creamos antes
-            window.open('galeria.html', '_blank');
         }
 
         // ===== CORAZONES FLOTANTES DE FONDO =====
@@ -661,9 +724,9 @@
             document.getElementById('password').value = '';
             document.getElementById('errorMessage').classList.remove('show');
             document.getElementById('loveOverlay').classList.remove('show');
+            document.getElementById('cartaModal').classList.remove('show');
             document.getElementById('mainContainer').classList.remove('content-hidden');
             
-            // Cerrar todos los menús desplegables al salir
             document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
             
             document.getElementById('mainContainer').style.animation = 'none';
