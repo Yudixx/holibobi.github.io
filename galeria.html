@@ -108,13 +108,14 @@
         const photos = [];
         
         // IMPORTANTE: Si tus fotos son .png o .jpeg, cambia "jpg" por tu formato
-        const extension = "jpg"; 
-        const totalFotos = 54; // Pon aquí el número total de tus fotos
+        const totalFotos = 54;
 
+        // Genera la lista de fotos
         for (let i = 1; i <= totalFotos; i++) {
             photos.push({
-                // Asume que las fotos están en la carpeta "fotos"
-                url: `fotos/foto${i}.${extension}`, 
+                // Buscará en formato jpg, pero si es png, la página se adaptará sola
+                url: `fotos/foto${i}.jpg`, 
+                urlAlt: `fotos/foto${i}.png`, // Por si la foto es png
                 caption: `Nuestro recuerdo #${i} 💕`
             });
         }
@@ -130,7 +131,7 @@
                 item.className = 'gallery-item';
                 item.onclick = () => openLightbox(index);
                 item.innerHTML = `
-                    <img src="${photo.url}" alt="${photo.caption}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x400/ff9a9e/ffffff?text=💔+Foto+no+encontrada'">
+                    <img src="${photo.url}" alt="${photo.caption}" loading="lazy" onerror="if(this.src.includes('.jpg')) { this.src = this.src.replace('.jpg', '.png'); } else { this.src='https://via.placeholder.com/400x400/ff9a9e/ffffff?text=💔+Foto+no+encontrada'; }">
                 `;
                 grid.appendChild(item);
             });
